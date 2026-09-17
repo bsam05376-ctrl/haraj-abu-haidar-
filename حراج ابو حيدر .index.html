@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حراج أبو حيدر العولقي للسيارات والسلع</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-100 font-sans">
+
+    <!-- شريط التنقل العلوي -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold text-red-600 flex items-center gap-2">
+                <i class="fa-solid fa-car-side"></i> حراج أبو حيدر العولقي
+            </a>
+            <button onclick="openAddModal()" class="bg-red-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-red-700 transition flex items-center gap-2">
+                <i class="fa-solid fa-plus"></i> أضف إعلانك
+            </button>
+        </div>
+    </header>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="container mx-auto px-4 py-6">
+        
+        <!-- ترحيب بالمستخدمين -->
+        <div class="bg-red-600 text-white p-4 rounded-xl shadow-md mb-6 text-center">
+            <h1 class="text-xl font-bold mb-1">مرحباً بك في حراج أبو حيدر العولقي</h1>
+            <p class="text-sm text-red-100">المنصة الأفضل لبيع وشراء السيارات، الدراجات، والسلع بكل ثقة وسرعة.</p>
+        </div>
+
+        <!-- قسم البحث الفوري -->
+        <div class="bg-white p-4 rounded-xl shadow-sm mb-4">
+            <div class="flex gap-2">
+                <input type="text" id="searchInput" oninput="filterAds()" placeholder="ابحث عن سيارة، دراجة، إلخ..." class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-red-500">
+                <button class="bg-gray-800 text-white px-6 py-2 rounded-lg font-bold hover:bg-gray-700"><i class="fa-solid fa-search"></i></button>
+            </div>
+        </div>
+
+        <!-- أزرار فلترة الأقسام -->
+        <div class="flex gap-2 overflow-x-auto pb-4 mb-4 scrollbar-none">
+            <button onclick="filterCategory('الكل')" id="btn-الكل" class="category-btn bg-red-600 text-white px-4 py-2 rounded-full font-bold text-sm whitespace-nowrap transition">الكل</button>
+            <button onclick="filterCategory('سيارات')" id="btn-سيارات" class="category-btn bg-white text-gray-700 border border-gray-300 px-4 py-2 rounded-full font-bold text-sm whitespace-nowrap transition hover:bg-gray-100">سيارات</button>
+            <button onclick="filterCategory('دراجات نارية')" id="btn-دراجات نارية" class="category-btn bg-white text-gray-700 border border-gray-300 px-4 py-2 rounded-full font-bold text-sm whitespace-nowrap transition hover:bg-gray-100">دراجات نارية</button>
+            <button onclick="filterCategory('أخرى')" id="btn-أخرى" class="category-btn bg-white text-gray-700 border border-gray-300 px-4 py-2 rounded-full font-bold text-sm whitespace-nowrap transition hover:bg-gray-100">أخرى</button>
+        </div>
+
+        <!-- عنوان القسم -->
+        <h2 class="text-xl font-bold text-gray-800 mb-4">أحدث المعروضات</h2>
+
+        <!-- شبكة الإعلانات -->
+        <div id="adsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <!-- سيتم إضافة الإعلانات هنا برمجياً -->
+        </div>
+
+    </main>
+
+    <!-- نافذة (Modal) إضافة إعلان جديد -->
+    <div id="addModal" class="fixed inset-0 bg-black/50 hidden justify-center items-center z-50 p-4">
+        <div class="bg-white w-full max-w-lg rounded-2xl p-6 shadow-xl max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold text-gray-800">إضافة إعلان جديد للحراج</h3>
+                <button onclick="closeAddModal()" class="text-gray-500 hover:text-red-500 text-xl"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="adForm" onsubmit="addNewAd(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">عنوان الإعلان</label>
+                    <input type="text" id="adTitle" required placeholder="أدخل اسم السلعة أو السيارة" class="w-full border rounded-lg px-3 py-2">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">القسم</label>
+                    <select id="adCategory" class="w-full border rounded-lg px-3 py-2">
+                        <option value="سيارات">سيارات</option>
+                        <option value="دراجات نارية">دراجات نارية</option>
+                        <option value="أخرى">أخرى</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">المدينة / المنطقة</label>
+                    <select id="adCity" class="w-full border rounded-lg px-3 py-2">
+                        <option value="شبوة">شبوة</option>
+                        <option value="صنعاء">صنعاء</option>
+                        <option value="عدن">عدن</option>
+                        <option value="مأرب">مأرب</option>
+                        <option value="حضرموت">حضرموت</option>
+                        <option value="الرياض">الرياض</option>
+                        <option value="جدة">جدة</option>
+                        <option value="أخرى">أخرى</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">السعر</label>
+                    <input type="text" id="adPrice" required placeholder="مثال: 65,000 ريال" class="w-full border rounded-lg px-3 py-2">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">رقم الهاتف (للتواصل واتساب)</label>
+                    <input type="tel" id="adPhone" required placeholder="مثال: 967770000000" class="w-full border rounded-lg px-3 py-2">
+                </div>
+                
+                <!-- رفع الصور -->
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">صور السلعة (اختر حتى 4 صور)</label>
+                    <div class="flex items-center gap-2">
+                        <label class="w-full border-2 border-dashed border-gray-300 rounded-lg p-3 text-center cursor-pointer hover:border-red-500 flex flex-col items-center justify-center bg-gray-50">
+                            <i class="fa-solid fa-camera text-2xl text-red-600 mb-1"></i>
+                            <span class="text-sm text-gray-600" id="filesName">اضغط هنا لالتقاط الصور أو اختيارها</span>
+                            <input type="file" id="adImageFiles" accept="image/*" multiple class="hidden" onchange="previewFilesName(this)">
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full bg-red-600 text-white py-2 rounded-lg font-bold hover:bg-red-700 transition">نشر الإعلان في الحراج</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- أكواد الجافاسكريبت المتقدمة -->
+    <script>
+        let ads = [
+            {
+                id: 1,
+                title: "تويوتا هيلوكس موديل 2020 نظيفة جداً",
+                category: "سيارات",
+                city: "شبوة",
+                price: "65,000 ريال",
+                phone: "967770000000",
+                views: 142,
+                images: [
+                    "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=500&q=80",
+                    "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=500&q=80",
+                    "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=500&q=80",
+                    "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=500&q=80"
+                ]
+            },
+            {
+                id: 2,
+                title: "دراجة نارية رياضية سريعة بحالة الوكالة",
+                category: "دراجات نارية",
+                city: "عدن",
+                price: "3,500 ريال",
+                phone: "967730000000",
+                views: 89,
+                images: [
+                    "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=500&q=80",
+                    "https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=500&q=80",
+                    "https://images.unsplash.com/photo-1515588260027-cbfd8677c117?auto=format&fit=crop&w=500&q=80",
+                    "https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=500&q=80"
+                ]
+            }
+        ];
+
+        let currentCategory = 'الكل';
+
+        function displayAds(adsToDisplay = ads) {
+            const grid = document.getElementById('adsGrid');
+            grid.innerHTML = '';
+            
+            if (adsToDisplay.length === 0) {
+                grid.innerHTML = '<p class="text-gray-500 col-span-full text-center py-10">لا توجد إعلانات مطابقة لبحثك.</p>';
+                return;
+            }
+
+            adsToDisplay.forEach((ad) => {
+                let mainImg = ad.images[0] || "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=500&q=80";
+                
+                let thumbnailsHTML = '';
+                ad.images.forEach((img, imgIndex) => {
+                    thumbnailsHTML += `
+                        <img src="${img}" onclick="changeMainImage(${ad.id}, ${imgIndex})" class="w-1/4 h-12 object-cover rounded cursor-pointer border-2 border-transparent hover:border-red-600 transition">
+                    `;
+                });
+
+                grid.innerHTML += `
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden flex flex-col justify-between relative">
+                        <!-- زر حذف الإعلان عند البيع -->
+                        <button onclick="deleteAd(${ad.id})" title="تم البيع / حذف الإعلان" class="absolute top-2 left-2 bg-red-600/80 hover:bg-red-700 text-white w-9 h-9 rounded-full flex items-center justify-center shadow transition z-10">
+                            <i class="fa-solid fa-trash-can text-sm"></i>
+                        </button>
+
+                        <!-- زر مشاركة الإعلان -->
+                        <button onclick="shareAd('${ad.title}', '${ad.price}')" title="مشاركة الإعلان" class="absolute top-2 left-13 bg-blue-600/80 hover:bg-blue-700 text-white w-9 h-9 rounded-full flex items-center justify-center shadow transition z-10">
+                            <i class="fa-solid fa-share-nodes text-sm"></i>
+                        </button>
+
+                        <!-- الصور والمدينة -->
+                        <div class="relative">
+                            <img id="main-img-${ad.id}" src="${mainImg}" alt="${ad.title}" class="w-full h-48 object-cover">
+                            <span class="absolute bottom-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-md backdrop-blur-sm">
+                                <i class="fa-solid fa-location-dot text-red-400"></i> ${ad.city}
+                            </span>
+                            <div class="flex gap-1 p-2 bg-gray-50 border-b">
+                                ${thumbnailsHTML}
+                            </div>
+                        </div>
+
+                        <div class="p-4 flex flex-col flex-grow">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-xs bg-red-100 text-red-600 px-2 py-1 rounded font-bold">${ad.category}</span>
+                                <span class="text-xs text-gray-400"><i class="fa-solid fa-eye"></i> ${ad.views} مشاهدة</span>
+                            </div>
+                            <h3 class="font-bold text-gray-800 text-lg mb-2">${ad.title}</h3>
+                            <div class="text-red-600 font-extrabold text-xl mb-4">${ad.price}</div>
+                            <a href="https://wa.me/${ad.phone}?text=السلام عليكم، أرسل لك بخصوص إعلانك (${ad.title}) في حراج أبو حيدر العولقي" target="_blank" onclick="incrementView(${ad.id})" class="mt-auto bg-green-600 text-white text-center py-2 rounded-lg font-bold hover:bg-green-700 transition flex items-center justify-center gap-2">
+                                <i class="fa-brands fa-whatsapp text-xl"></i> تواصل عبر واتساب
+                            </a>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // تغيير الصورة المصغرة
+        function changeMainImage(adId, imgIndex) {
+            const ad = ads.find(a => a.id === adId);
+            if (ad) {
+                document.getElementById(`main-img-${adId}`).src = ad.images[imgIndex];
+            }
+        }
+
+        // فلترة الأقسام
+        function filterCategory(category) {
+            currentCategory = category;
+            
+            // تغيير لون الأزرار
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('bg-red-600', 'text-white');
+                btn.classList.add('bg-white', 'text-gray-700', 'border');
+            });
+            const activeBtn = document.getElementById(`btn-${category}`);
+            if(activeBtn) {
+                activeBtn.classList.remove('bg-white', 'text-gray-700', 'border');
+                activeBtn.classList.add('bg-red-600', 'text-white');
+            }
+
+            applyFilters();
+        }
+
+        // البحث الفوري والفلترة معاً
+        function filterAds() {
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const searchText = document.getElementById('searchInput').value.toLowerCase();
+            
+            let filtered = ads.filter(ad => {
+                let matchesCategory = (currentCategory === 'الكل' || ad.category === currentCategory);
+                let matchesSearch = ad.title.toLowerCase().includes(searchText) || ad.city.toLowerCase().includes(searchText);
+                return matchesCategory && matchesSearch;
+            });
+
+            displayAds(filtered);
+        }
+
+        // زيادة عداد المشاهدات عند التواصل
+        function incrementView(id) {
+            const ad = ads.find(a => a.id === id);
+            if(ad) {
+                ad.views++;
+            }
+        }
+
+        // مشاركة الإعلان
+        function shareAd(title, price) {
+            if (navigator.share) {
+                navigator.share({
+                    title: title,
+                    text: `شاهد هذا الإعلان في حراج أبو حيدر العولقي: ${title} بسعر ${price}`,
+                    url: window.location.href,
+                }).catch(() => {});
+            } else {
+                alert(`تم نسخ تفاصيل الإعلان للمشاركة: ${title} - ${price}`);
+            }
+        }
+
+        function openAddModal() {
+            document.getElementById('addModal').classList.remove('hidden');
+            document.getElementById('addModal').classList.add('flex');
+        }
+        function closeAddModal() {
+            document.getElementById('addModal').classList.add('hidden');
+            document.getElementById('addModal').classList.remove('flex');
+        }
+
+        function previewFilesName(input) {
+            if (input.files) {
+                document.getElementById('filesName').innerText = `تم اختيار ${input.files.length} صور`;
+            }
+        }
+
+        function deleteAd(id) {
+            if (confirm("هل تم بيع هذه السلعة وتريد حذف الإعلان من الحراج نهائياً؟")) {
+                ads = ads.filter(a => a.id !== id);
+                applyFilters();
+            }
+        }
+
+        function addNewAd(event) {
+            event.preventDefault();
+            
+            const title = document.getElementById('adTitle').value;
+            const category = document.getElementById('adCategory').value;
+            const city = document.getElementById('adCity').value;
+            const price = document.getElementById('adPrice').value;
+            const phone = document.getElementById('adPhone').value;
+            const fileInput = document.getElementById('adImageFiles');
+
+            let defaultImages = [
+                "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=500&q=80",
+                "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=500&q=80",
+                "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=500&q=80",
+                "https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=500&q=80"
+            ];
+
+            if (fileInput.files && fileInput.files.length > 0) {
+                let loadedImages = [];
+                let filesCount = Math.min(fileInput.files.length, 4);
+                let processed = 0;
+
+                for (let i = 0; i < filesCount; i++) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        loadedImages.push(e.target.result);
+                        processed++;
+                        
+                        if (processed === filesCount) {
+                            while(loadedImages.length < 4) {
+                                loadedImages.push(defaultImages[loadedImages.length]);
+                            }
+                            saveAndRenderNewAd(title, category, city, price, phone, loadedImages);
+                        }
+                    }
+                    reader.readAsDataURL(fileInput.files[i]);
+                }
+            } else {
+                saveAndRenderNewAd(title, category, city, price, phone, defaultImages);
+            }
+        }
+
+        function saveAndRenderNewAd(title, category, city, price, phone, images) {
+            const newAd = {
+                id: Date.now(),
+                title,
+                category,
+                city,
+                price,
+                phone,
+                views: 1,
+                images
+            };
+            ads.unshift(newAd);
+            applyFilters();
+            closeAddModal();
+            document.getElementById('adForm').reset();
+            document.getElementById('filesName').innerText = "اضغط هنا لالتقاط الصور أو اختيارها";
+            alert('تم نشر إعلانك في حراج أبو حيدر العولقي بنجاح!');
+        }
+
+        // العرض الأولي عند فتح الصفحة
+        displayAds();
+    </script>
+</body>
+</html>
